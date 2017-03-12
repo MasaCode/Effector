@@ -236,5 +236,17 @@ Effector.prototype = {
         }
         this.slidein(playback, element);
     },
+
+    backslidein: function (playback, element) {
+         x = 1.5;
+        playback = Math.pow(playback, 2) * ((1 + x) * playback - x);
+        this.slidein(playback, element);
+    },
+
+    elastic: function (playback, element) {
+        x = 1.5;
+        playback = Math.pow(2, 10 * (playback - 1)) * Math.cos(20 * Math.PI * x / 3 * playback);
+        this.slidein(playback, element);
+    },
 };
 
