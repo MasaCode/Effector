@@ -9,6 +9,11 @@
 
     <!-- for reset -->
     <link rel="stylesheet" href="common/css/reset.css">
+    <style>
+        #title{
+            width : 10%;
+        }
+    </style>
 </head>
 
 <body onload="onLoadFunction()">
@@ -40,15 +45,17 @@
             elements : [
                 {
                     selector : '#title',
-                    func : 'fadein',
+                    func : 'bounce',
                     showTogether : true,
+                    from : ['bottomright'],
                 },
                 {
                     selector : '.parag',
                     func : 'fadein',
                     showTogether : true,
                 }
-            ]
+            ],
+            delay : 1000,
         });
     }
 </script>
