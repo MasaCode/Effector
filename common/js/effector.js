@@ -209,5 +209,32 @@ Effector.prototype = {
             'left : ' + pos.x + '%;', 'top : ' + pos.y + '%;'
         );
     },
+
+    easeoutquad: function (playback, element) {
+        playback = playback * (2 - playback);
+        this.slidein(playback, element);
+    },
+
+    easeinquad: function (playback, element) {
+        playback = playback * playback;
+        this.slidein(playback, element);
+    },
+
+    easeinoutquad: function (playback, element) {
+        playback = playback < 0.5 ? 2 * playback * playback : -1 + (4 - 2 * playback) * playback;
+        this.slidein(playback, element);
+    },
+
+    bounce: function (playback, element) {
+        var bounce = 1.20;
+        var turnpoint = 1.10;
+        playback = playback * bounce * (2 - playback);
+        if (playback > turnpoint) {
+            playback = 1 - (bounce - playback);
+        } else if (playback > 1.0) {
+            playback -= (playback - 1) * 2;
+        }
+        this.slidein(playback, element);
+    },
 };
 
