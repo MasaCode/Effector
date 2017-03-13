@@ -190,6 +190,7 @@ Effector.prototype = {
 
             if (this.elementIndex >= this.elementLength) {
                 this.stop();
+                cancelAnimationFrame(this.intervalId);
                 isDone = true;
             } else {
                 this.startedAt = 0;
@@ -197,7 +198,7 @@ Effector.prototype = {
             }
         }
 
-        if(!isDone) window.requestAnimationFrame(this.update.bind(this));
+        if(!isDone) this.intervalId = window.requestAnimationFrame(this.update.bind(this));
     },
 
     fadein: function (playback, element) {
