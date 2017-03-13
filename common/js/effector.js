@@ -1,4 +1,5 @@
 function Effector(option) {
+    this.initializeAnimationFrame();
     this.initialize(option);
     return this;
 }
@@ -73,6 +74,17 @@ Effector.prototype = {
         window.setTimeout(this.start.bind(this), this.delay);
     },
 
+    initializeAnimationFrame: function () {
+        window.requestAnimFrame = (function(){
+            return  window.requestAnimationFrame       ||
+                window.webkitRequestAnimationFrame ||
+                window.mozRequestAnimationFrame    ||
+                function( callback ){
+                    window.setTimeout(callback, 1000 / 60);
+                };
+        })();
+    },
+
     getPosition: function (element) {
         var x = 0, y = 0;
         var width = window.innerWidth;
@@ -134,7 +146,7 @@ Effector.prototype = {
     start: function () {
         this.startedAt = 0;
         this.elementIndex = 0;
-        this.intervalId = setInterval(this.update.bind(this), this.interval);
+        this.update();
     },
 
     stop: function () {
@@ -151,6 +163,7 @@ Effector.prototype = {
     },
 
     update: function () {
+        var isDone = false;
         this.startedAt += (this.interval / this.effectLength);
         if (this.elements[this.elementIndex].showTogether) {
             var nodeLength = this.elements[this.elementIndex].nodes.length;
@@ -177,11 +190,14 @@ Effector.prototype = {
 
             if (this.elementIndex >= this.elementLength) {
                 this.stop();
+                isDone = true;
             } else {
                 this.startedAt = 0;
                 this.isEffectInitialized = false;
             }
         }
+
+        if(!isDone) window.requestAnimationFrame(this.update.bind(this));
     },
 
     fadein: function (playback, element) {
