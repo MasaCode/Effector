@@ -41,6 +41,11 @@ var effector = new Effector({
 });
 ```
 ## Configuration options
+#### **delay** Delay until effects start (seconds)
+```Javascript
+delay : 0
+delay : 1000
+```
 #### **elements** An array of element information
 **selector** An ID or Class of DOM element
 ```Javascript
@@ -81,9 +86,4 @@ elements : [
         from : ['bottomright'],
     },
 ]
-```
-#### **delay** Delay until effects start (seconds)
-```Javascript
-delay : 0
-delay : 1000
 ```
