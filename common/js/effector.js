@@ -21,7 +21,7 @@ Effector.prototype = {
 
     initialize: function (option) {
         if (typeof option.delay !== 'number' || option.delay < 0) {
-            console.log('Error : Delay is not vaild...');
+            console.log(new Error('Delay is not vaild...'));
             return;
         }
         this.option = option;
@@ -68,7 +68,7 @@ Effector.prototype = {
         }
 
         if (!isValid) {
-            console.log('Effect Function is invalid');
+            console.log(new Error('Effect Function is invalid'));
         }
 
         window.setTimeout(this.start.bind(this), this.delay);
