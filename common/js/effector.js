@@ -32,7 +32,7 @@ Effector.prototype = {
         for (var i = 0; i < this.elementLength; i++) {
             var obj = {};
             obj.useCustomDirection = (typeof option.elements[i].useCustomDirection === 'boolean') ? option.elements[i].useCustomDirection : false;
-            var toLength, fromLength;
+            var toLength = null, fromLength = null;
             var isValidDestination = (Array.isArray(option.elements[i].to)) ? true : false;
             var isValidFrom = (Array.isArray(option.elements[i].from)) ? true : false;
             if (isValidDestination) toLength = option.elements[i].to.length;
@@ -41,6 +41,9 @@ Effector.prototype = {
             var nodeLength = nodes.length;
             for (var j = 0; j < nodeLength; j++) {
                 nodes[j].initPos = this.getPosition(nodes[j]);
+                if (fromLength !== null && fromLength !== 0) {
+                   nodes[j].from = option.elements[i].from[0];
+                }
                 if (isValidDestination) {
                     nodes[j].to = option.elements[i].to[j];
                     if (j + 1 === toLength) {
@@ -137,8 +140,8 @@ Effector.prototype = {
     },
 
     calcPosition: function (playback, to, from) {
-        var x = (to.x >= from.x) ? to.x * playback : (from.x - from.x * playback);
-        var y = (to.y >= from.y) ? to.y * playback : (from.y - from.y * playback);
+        var x = (to.x >= from.x) ? to.x * playback : from.x - ((from.x - to.x) * playback);
+        var y = (to.y >= from.y) ? to.y * playback : from.y - ((from.y - to.y) * playback);
 
         return {x: x, y: y};
     },
@@ -152,7 +155,6 @@ Effector.prototype = {
     stop: function () {
         clearInterval(this.intervalId);
         this.intervalId = 0;
-        this.isEffectInitialized = false;
     },
 
     reset: function (elements) {
@@ -160,6 +162,7 @@ Effector.prototype = {
         for (var elIndex = 0; elIndex < length; elIndex++) {
             elements[elIndex].style.cssText = '';
         }
+        this.isEffectInitialized = false;
     },
 
     update: function () {
