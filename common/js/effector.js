@@ -146,6 +146,32 @@ Effector.prototype = {
         return {x: x, y: y};
     },
 
+    calcBezierCurvePosition: function (playback, element) {
+        var x, y, t = 0.5, third = {};
+        if (element.use3Points) {
+            if (element.isDown) {
+                third.x = (element.from.x + element.to.x) / 2.0 + t * (element.to.y - element.from.y);
+                third.y = (element.from.y + element.to.y) / 2.0 - t * (element.to.x - element.from.x);
+            } else {
+                third.x = (element.from.x + element.to.x) / 2.0 - t * (element.to.y - element.from.y);
+                third.y = (element.from.y + element.to.y) / 2.0 + t * (element.to.x - element.from.x);
+            }
+
+            x = Math.pow((1 - playback), 2) * element.from.x + 2 * (1 - playback) * playback * third.x + Math.pow(playback, 2) * element.to.x;
+            y = Math.pow((1 - playback), 2) * element.from.y + 2 * (1 - playback) * playback * third.y + Math.pow(playback, 2) * element.to.y;
+        } else if (element.use4Points) {
+            var fourth = {};
+            third.y = element.from.y;
+            third.x = Math.abs((element.to.x - element.from.x) / 2.0);
+            fourth.y = element.to.y;
+            fourth.x = third.x;
+            x = Math.pow((1 - playback), 3)*element.from.x + 3*Math.pow((1 - playback), 2)*playback*third.x + 3*(1 - playback)*Math.pow(playback, 2)*fourth.x + Math.pow(playback, 3)*element.to.x;
+            y = Math.pow((1 - playback), 3)*element.from.y + 3*Math.pow((1 - playback), 2)*playback*third.y + 3*(1 - playback)*Math.pow(playback, 2)*fourth.y + Math.pow(playback, 3)*element.to.y;
+        }
+        
+        return {x: x, y: y};
+    },
+
     start: function () {
         this.startedAt = 0;
         this.elementIndex = 0;
@@ -268,5 +294,22 @@ Effector.prototype = {
         playback = Math.pow(2, 10 * (playback - 1)) * Math.cos(20 * Math.PI * x / 3 * playback);
         this.slidein(playback, element);
     },
+
+    beziercurvedown3: function (playback, element) {
+        element.use3Points = true;
+        element.isDown = true;
+        this.slidein(playback, element, this.calcBezierCurvePosition);
+    },
+
+    beziercurveup3: function (playback, element) {
+        element.use3Points = true;
+        element.isDown = false;
+        this.slidein(playback, element, this.calcBezierCurvePosition);
+    },
+
+    beziercurve4: function (playback, element) {
+        element.use4Points = true;
+        this.slidein(playback, element, this.calcBezierCurvePosition);
+    }
 };
 
