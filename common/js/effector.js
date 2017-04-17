@@ -212,7 +212,7 @@ Effector.prototype = {
         element.style.opacity = playback;
     },
 
-    slidein: function (playback, element) {
+    slidein: function (playback, element, callback) {
         if (!this.isEffectInitialized) {
             if (!this.elements[this.elementIndex].useCustomDirection) {
                 var size = {x: element.offsetWidth, y: element.offsetHeight};
@@ -224,7 +224,7 @@ Effector.prototype = {
             );
             return;
         }
-        var pos = this.calcPosition(playback, element.to, element.from);
+        var pos = (callback === undefined) ? this.calcPosition(playback, element.to, element.from) : callback(playback, element);
         element.style.cssText += ''.concat(
             'left : ' + pos.x + '%;', 'top : ' + pos.y + '%;'
         );
